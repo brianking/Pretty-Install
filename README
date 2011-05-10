@@ -1,0 +1,19 @@
+There was a plan to turn the Firefox add-on install dialog into a doorhanger dialog:
+
+https://bugzilla.mozilla.org/show_bug.cgi?id=588266
+
+This was abandoned in favor of an approach using tabs:
+
+https://bugzilla.mozilla.org/show_bug.cgi?id=643020
+
+Rather than let the work for the former approach go to waste, we are releasing it as an add-on.
+
+USAGE:
+
+- It only works for remote installs. For local installs, the current dialog shows
+- Clicking anywhere outside the doorhanger dismisses it and cancels the install.
+- Switching to a new tab or window when the doorhanger is open cancels the install.
+
+Icons by http://dryicons.com (Iconika Green Icon Set - http://dryicons.com/free-icons/preview/iconika-green-icons/)
+
+Licensed under the Mozilla Public License (MPL) - http://www.mozilla.org/MPL/
