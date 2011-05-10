@@ -1,0 +1,19 @@
+content aoi chrome/content/
+locale  aoi en-US chrome/locale/en-US/
+
+skin    aoi classic/1.0 chrome/skin/winstripe/ os=WINNT
+skin    aoi classic/1.0 chrome/skin/pinstripe/ os=Darwin
+skin    aoi classic/1.0 chrome/skin/gnomestripe/ os=Linux
+
+overlay chrome://browser/content/browser.xul chrome://aoi/content/browserOverlay.xul
+
+override chrome://mozapps/content/extensions/xpinstallConfirm.xml chrome://aoi/content/extensions/xpinstallConfirm.xml
+override chrome://mozapps/content/extensions/xpinstallConfirm.css chrome://aoi/content/extensions/xpinstallConfirm.css
+
+override chrome://mozapps/locale/extensions/xpinstallConfirm.dtd chrome://aoi/locale/extensions/xpinstallConfirm.dtd
+override chrome://mozapps/locale/extensions/xpinstallConfirm.properties chrome://aoi/locale/extensions/xpinstallConfirm.properties
+
+override chrome://mozapps/skin/extensions/xpinstallConfirm.css chrome://aoi/skin/extensions/xpinstallConfirm.css
+
+component {d32ccdf1-c93f-4d3f-95cc-8e18e28da698} components/nsBrowserGlue.js
+contract @mozilla.org/addons/web-install-prompt;1 {d32ccdf1-c93f-4d3f-95cc-8e18e28da698}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<r:RDF xmlns="http://www.mozilla.org/2004/em-rdf#"
+       xmlns:r="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <r:Description about="urn:mozilla:install-manifest">
+
+    <description>Use a doorhanger notification for add-on installation</description>
+    <creator>Briks Software</creator>
+    <developer>Sylvain Pasche</developer>
+    <developer>Brian King</developer>
+
+    <homepageURL>https://bugzilla.mozilla.org/show_bug.cgi?id=588266</homepageURL>
+    <iconURL>chrome://aoi/content/accept.png</iconURL>
+    <id>aoi@mozilla.org</id>
+    <name>Pretty Install</name>
+    <version>1.0</version>
+
+    <targetApplication>
+      <r:Description>
+        <id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</id>
+        <minVersion>4.0</minVersion>
+        <maxVersion>4.0.*</maxVersion>
+      </r:Description>
+    </targetApplication>
+
+  </r:Description>
+</r:RDF>

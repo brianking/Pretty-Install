@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!--
+# ***** BEGIN LICENSE BLOCK *****
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is mozilla.org Code.
+#
+# The Initial Developer of the Original Code is
+# Sylvain Pasche.
+# Portions created by the Initial Developer are Copyright (C) 2010
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#   Sylvain Pasche <sylvain.pasche@gmail.com>
+#   Brian King
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+# ***** END LICENSE BLOCK *****
+-->
+<!DOCTYPE bindings [
+<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd">
+%brandDTD;
+<!ENTITY % xpinstallConfirmDTD SYSTEM "chrome://mozapps/locale/extensions/xpinstallConfirm.dtd">
+%xpinstallConfirmDTD;
+]>
+
+<bindings id="xpinstallConfirmBindings"
+          xmlns="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:xbl="http://www.mozilla.org/xbl">
+
+  <binding id="xpinstall-notification" extends="chrome://global/content/bindings/notification.xml#popup-notification">
+    <resources>
+      <stylesheet src="chrome://mozapps/content/extensions/xpinstallConfirm.css"/>
+      <stylesheet src="chrome://mozapps/skin/extensions/xpinstallConfirm.css"/>
+    </resources>
+    <content align="start">
+      <xul:image class="popup-notification-icon"
+                 xbl:inherits="popupid"/>
+      <xul:vbox>
+        <xul:label anonid="addonInstallIntro" class="xpinstallWarningIntro"/>
+        <xul:vbox anonid="itemList" class="xpinstallItemList" flex="1"/>
+
+        <xul:hbox id="xpinstallheader" align="start">
+          <xul:image class="alert-icon"/>
+          <xul:vbox flex="1">
+            <xul:description class="warning">&warningPrimary.label;</xul:description>
+            <xul:description>&warningSecondary.label;</xul:description>
+          </xul:vbox>
+        </xul:hbox>
+
+        <xul:spacer flex="1"/>
+        <xul:hbox pack="end">
+          <xul:button anonid="button"
+                      class="popup-notification-menubutton"
+                      disabled="true"
+                      xbl:inherits="oncommand=buttoncommand,label=buttonlabel,accesskey=buttonaccesskey,type=buttontype"/>
+        </xul:hbox>
+      </xul:vbox>
+    </content>
+    <implementation>
+      <field name="addonInstallIntro" readonly="true">
+        document.getAnonymousElementByAttribute(this, "anonid", "addonInstallIntro");
+      </field>
+
+      <field name="itemList" readonly="true">
+        document.getAnonymousElementByAttribute(this, "anonid", "itemList");
+      </field>
+
+      <field name="installs" readonly="true">
+        this.notification.options.installs;
+      </field>
+
+      <constructor><![CDATA[
+        let numItemsToInstall = this.installs.length;
+        let bundle = Services.strings.createBundle(
+          "chrome://mozapps/locale/extensions/xpinstallConfirm.properties");
+
+        for (let i = 0; i < numItemsToInstall; ++i) {
+          let install = this.installs[i];
+          let installItem = document.createElement("installitem");
+          this.itemList.appendChild(installItem);
+
+          installItem.name = install.name;
+          installItem.version = install.version;
+          installItem.url = install.sourceURI.spec;
+          if (install.iconURL)
+            installItem.icon = install.iconURL;
+          if (install.type)
+            installItem.type = install.type;
+          if (install.certName)
+            installItem.cert = install.certName;
+          else
+            installItem.cert = "";
+          installItem.signed = install.certName ? "true" : "false";
+        }
+
+        let introString = bundle.GetStringFromName("itemWarnIntro");
+        introString = PluralForm.get(numItemsToInstall, introString)
+                                .replace("#1", numItemsToInstall);
+        this.addonInstallIntro.value = introString;
+
+        const BUTTON_ENABLE_DELAY = 0;
+        let self = this;
+        setTimeout(function() {
+          if (self.button)
+            self.button.disabled = false;
+        }, BUTTON_ENABLE_DELAY, this);
+
+      ]]></constructor>
+    </implementation>
+  </binding>
+
+  <binding id="installitem">
+    <resources>
+      <stylesheet src="chrome://mozapps/skin/extensions/xpinstallConfirm.css"/>
+    </resources>
+    <content>
+      <xul:hbox flex="1">
+        <xul:vbox align="center" pack="center" class="xpinstallIconContainer">
+          <xul:image class="xpinstallItemIcon" xbl:inherits="src=icon"/>
+        </xul:vbox>
+        <xul:vbox flex="1" pack="center">
+          <xul:label class="xpinstallItemNameVersion" xbl:inherits="value=nameVersion" crop="right"/>
+          <xul:label class="xpinstallItemAuthor" xbl:inherits="value=author,signed"/>
+          <xul:hbox class="xpinstallItemDetailsRow" align="center">
+            <xul:textbox class="xpinstallItemSource" xbl:inherits="value=source" flex="1" readonly="true" crop="right"/>
+          </xul:hbox>
+        </xul:vbox>
+      </xul:hbox>
+    </content>
+    <implementation>
+      <property name="name"     onset="this.setAttribute('name', val); return val;"
+                                onget="return this.getAttribute('name');"/>
+      <property name="version"  onset="this.setAttribute('version', val); return val;"
+                                onget="return this.getAttribute('version');"/>
+      <property name="cert"     onset="this.setAttribute('cert', val); return val;"
+                                onget="return this.getAttribute('cert');"/>
+      <property name="signed"   onset="this.setAttribute('signed', val); return val;"
+                                onget="return this.getAttribute('signed');"/>
+      <property name="url"      onset="this.setAttribute('url', val); return val;"
+                                onget="return this.getAttribute('url');"/>
+      <property name="icon"     onset="this.setAttribute('icon', val); return val;"
+                                onget="return this.getAttribute('icon');"/>
+      <property name="type"     onset="this.setAttribute('type', val); return val;"
+                                onget="return this.getAttribute('type');"/>
+
+      <constructor><![CDATA[
+        let self = this;
+
+        function getAnon(className)
+          document.getAnonymousElementByAttribute(self, "class", className);
+
+        let bundle = Services.strings.createBundle(
+          "chrome://mozapps/locale/extensions/xpinstallConfirm.properties");
+        getAnon("xpinstallItemNameVersion").value =
+          bundle.formatStringFromName("nameVersion", [this.name, this.version], 2);
+        if (this.cert && this.cert != "") {
+          getAnon("xpinstallItemAuthor").value =
+            bundle.formatStringFromName("author", [this.cert], 1);
+        }
+        else {
+          getAnon("xpinstallItemAuthor").value = bundle.GetStringFromName("unverified");
+        }
+        getAnon("xpinstallItemSource").value = this.url;
+        getAnon("xpinstallItemSource").setAttribute("tooltiptext", this.url);
+      ]]></constructor>
+
+    </implementation>
+  </binding>
+</bindings>

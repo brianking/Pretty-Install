@@ -1,0 +1,3 @@
+#addon-install-downloaded-notification {
+  -moz-binding: url("chrome://mozapps/content/extensions/xpinstallConfirm.xml#xpinstall-notification");
+}

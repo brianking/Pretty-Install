@@ -1,0 +1,5 @@
+.popup-notification-icon[popupid="addon-install-downloaded"] {
+  list-style-image: url(chrome://mozapps/skin/extensions/extensionGeneric.png);
+  width: 32px;
+  height: 32px;
+}
