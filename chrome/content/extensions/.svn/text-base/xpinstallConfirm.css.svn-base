@@ -1,3 +1,0 @@
-installitem {
-  -moz-binding: url("chrome://mozapps/content/extensions/xpinstallConfirm.xml#installitem");
-}
